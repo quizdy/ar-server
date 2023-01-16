@@ -1,8 +1,8 @@
 {
-    "main": "dist/index.ts",
+    "main": "dist/app.ts",
     "private": true,
     "scripts": {
-        "dev": "ts-node-dev --respawn src/index.ts",
+        "dev": "ts-node-dev --respawn src/app.ts",
         "clean": "rimraf dist/*",
         "tsc": "tsc",
         "build": "npm-run-all clean tsc",
