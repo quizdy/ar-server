@@ -274,9 +274,9 @@ router.post('/delete-target', (req: express.Request, res: express.Response) => {
 const writeImage = (venue: string, title: string, base64: any): string => {
   if (!venue || !title || !base64) return ''
   if (base64.startsWith('data:image')) {
-    const data = base64.replace(/^data:\w+\/\w+base64,/, '')
+    const data = base64.replace(/^data:\w+\/\w+;base64,/, '')
     const decoded = Buffer.from(data, 'base64')
-    const ext = base64.toString().slice(base64.indexOf('/') + 1, base64.indexOf(''))
+    const ext = base64.toString().slice(base64.indexOf('/') + 1, base64.indexOf(';'))
     const dir = path.join(__dirname, IMAGES_PATH, venue)
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true })
     const filePath = path.join(__dirname, IMAGES_PATH, venue, title + '.' + ext)
