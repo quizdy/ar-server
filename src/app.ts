@@ -34,7 +34,6 @@ app.listen(port, () => {
  * Get Venues
  */
 app.get('/venues', (req: express.Request, res: express.Response) => {
-  console.log('venues')
   const venuesPath = path.join(__dirname, VENUES_PATH)
   if (!fs.existsSync(venuesPath)) {
     res.send([])
@@ -48,7 +47,6 @@ app.get('/venues', (req: express.Request, res: express.Response) => {
  * Get Targets
  */
 app.get('/targets', (req: express.Request, res: express.Response) => {
-  console.log('targets', req)
   const venue = req.query.venue as string | undefined;
   const venuePath = path.join(__dirname, VENUES_PATH, venue + '.json')
 
@@ -185,7 +183,7 @@ app.post('/update-target', (req: express.Request, res: express.Response) => {
     json.targets[pos].comments = target.comments
   }
 
-  // json.targets[pos].pic = writeImage(venue, target.title, target.base64)
+  json.targets[pos].pic = writeImage(venue, target.title, target.base64)
 
   if (!json.targets[pos].pic) {
     res.send({
@@ -248,7 +246,7 @@ app.post('/delete-target', (req: express.Request, res: express.Response) => {
     if (fs.existsSync(image)) {
       fs.unlinkSync(image)
     }
-    delete json.targets[pos]
+    json.targets.splice(pos, 1)
   }
 
   try {
