@@ -197,7 +197,8 @@ router.post('/delete-venue', (req: express.Request, res: express.Response) => {
   }
   
   const imagesPath = path.join(__dirname, IMAGES_PATH)
-  const imageDir = path.join(__dirname, imagesPath, venue)
+  const imageDir = path.join(imagesPath, venue)
+
   if (fs.existsSync(imageDir)) {
     fs.rmdirSync(imageDir, { recursive: true })
   }
