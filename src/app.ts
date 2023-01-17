@@ -11,7 +11,7 @@ const IMAGES_PATH = '../public/images'
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }))
-app.use(express.static('images'))
+app.use(express.static('public'))
 
 /**
  * CORS
@@ -33,14 +33,18 @@ app.listen(port, () => {
 /**
  * Get Venues
  */
-app.get('/venues', (req: express.Request, res: express.Response) => {
+app.get('/venues', (_req: express.Request, res: express.Response) => {
   const venuesPath = path.join(__dirname, VENUES_PATH)
   if (!fs.existsSync(venuesPath)) {
-    res.send([])
+    res.send({
+      venues: []
+    })
     return
   }
   const venues = fs.readdirSync(venuesPath).map((json) => path.basename(json, '.json'))
-  res.send(venues)
+  res.send({
+    venues: venues
+  })
 })
 
 /**
@@ -169,7 +173,7 @@ app.post('/update-target', (req: express.Request, res: express.Response) => {
       title: target.title,
       lat: target.lat,
       lng: target.lng,
-      pic: target.pic,
+      image: target.image,
       comments: target.comments  
     }
     pos = json.targets.length
@@ -179,13 +183,13 @@ app.post('/update-target', (req: express.Request, res: express.Response) => {
     json.targets[pos].title = target.title
     json.targets[pos].lat = target.lat
     json.targets[pos].lng = target.lng
-    json.targets[pos].pic = target.pic
+    json.targets[pos].image = target.image
     json.targets[pos].comments = target.comments
   }
 
-  json.targets[pos].pic = writeImage(venue, target.title, target.base64)
+  json.targets[pos].image = writeImage(venue, target.title, target.base64)
 
-  if (!json.targets[pos].pic) {
+  if (!json.targets[pos].image) {
     res.send({
       ret: false,
       msg: 'failed to write image'
@@ -242,7 +246,7 @@ app.post('/delete-target', (req: express.Request, res: express.Response) => {
   }
   else {
     const imagesPath = path.join(__dirname, IMAGES_PATH)
-    const image = path.join(__dirname, imagesPath, venue, json.targets[pos].pic)
+    const image = path.join(__dirname, imagesPath, venue, json.targets[pos].image)
     if (fs.existsSync(image)) {
       fs.unlinkSync(image)
     }
