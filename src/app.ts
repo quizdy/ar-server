@@ -218,14 +218,20 @@ router.post('/delete-target', (req: express.Request, res: express.Response) => {
 
   const venuesPath = path.join(__dirname, VENUES_PATH)
   if (!fs.existsSync(venuesPath)) {
-    res.send({msg: 'no exist venues'})
+    res.send({
+      ret: false,
+      msg: 'no exist venues'
+    })
     return
   }
 
   const venuePath = path.join(__dirname, VENUES_PATH, venue + '.json')
 
   if (!fs.existsSync(venuePath)) {
-    res.send({msg: 'no exist venue'})
+    res.send({
+      ret: false,
+      msg: 'no exist venue'
+    })
     return
   }
   
@@ -242,7 +248,7 @@ router.post('/delete-target', (req: express.Request, res: express.Response) => {
   }
   else {
     const imagesPath = path.join(__dirname, IMAGES_PATH)
-    const image = path.join(__dirname, imagesPath, venue, json.targets[pos].image)
+    const image = path.join(imagesPath, venue, json.targets[pos].image)
     if (fs.existsSync(image)) {
       fs.unlinkSync(image)
     }
