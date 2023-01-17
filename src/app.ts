@@ -29,7 +29,6 @@ app.use((_req: express.Request, res: express.Response, next: express.NextFunctio
  * Get Venues
  */
 router.get('/venues', (_req: express.Request, res: express.Response) => {
-  console.log("aa")
   const venuesPath = path.join(__dirname, VENUES_PATH)
   if (!fs.existsSync(venuesPath)) {
     res.send({
@@ -102,45 +101,6 @@ router.post('/update-venue', (req: express.Request, res: express.Response) => {
 })
 
 /**
- * Delete Venue
- */
-router.post('/delete-venue', (req: express.Request, res: express.Response) => {
-  const venue = req.body.venue as string | undefined
-
-  if (typeof venue === 'undefined') return
-
-  const venuesPath = path.join(__dirname, VENUES_PATH)
-  if (!fs.existsSync(venuesPath)) {
-    res.send({
-      ret: false,
-      msg: 'not found venues'
-    })
-  }
-
-  const venuePath = path.join(venuesPath, venue + '.json')
-  if (fs.existsSync(venuePath)) {
-    fs.unlinkSync(venuePath)
-  }
-  else {
-    res.send({
-      ret: false,
-      msg: 'not found venue'
-    })
-  }
-  
-  const imagesPath = path.join(__dirname, IMAGES_PATH)
-  const imageDir = path.join(__dirname, imagesPath, venue)
-  if (fs.existsSync(imageDir)) {
-    fs.rmdirSync(imageDir, { recursive: true })
-  }
-
-  res.send({
-    ret: true,
-    msg: 'success'
-  })
-})
-
-/**
  * Update Target
  */
 router.post('/update-target', (req: express.Request, res: express.Response) => {
@@ -201,6 +161,45 @@ router.post('/update-target', (req: express.Request, res: express.Response) => {
       msg: JSON.stringify(e)
     })
     return
+  }
+
+  res.send({
+    ret: true,
+    msg: 'success'
+  })
+})
+
+/**
+ * Delete Venue
+ */
+router.post('/delete-venue', (req: express.Request, res: express.Response) => {
+  const venue = req.body.venue as string | undefined
+
+  if (typeof venue === 'undefined') return
+
+  const venuesPath = path.join(__dirname, VENUES_PATH)
+  if (!fs.existsSync(venuesPath)) {
+    res.send({
+      ret: false,
+      msg: 'not found venues'
+    })
+  }
+
+  const venuePath = path.join(venuesPath, venue + '.json')
+  if (fs.existsSync(venuePath)) {
+    fs.unlinkSync(venuePath)
+  }
+  else {
+    res.send({
+      ret: false,
+      msg: 'not found venue'
+    })
+  }
+  
+  const imagesPath = path.join(__dirname, IMAGES_PATH)
+  const imageDir = path.join(__dirname, imagesPath, venue)
+  if (fs.existsSync(imageDir)) {
+    fs.rmdirSync(imageDir, { recursive: true })
   }
 
   res.send({
